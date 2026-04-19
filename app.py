@@ -196,4 +196,4 @@ if __name__ == '__main__':
                 category = Category(name=category_name)
                 db.session.add(category)
             db.session.commit()
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
