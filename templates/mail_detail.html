@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px;">
+        {% if mail.thumbnail %}
+        <img src="{{ mail.thumbnail }}" alt="Thumbnail" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 4px; margin-bottom: 20px;">
+        {% endif %}
+        <h2>{{ mail.title }}</h2>
+        <div class="meta" style="margin-bottom: 20px;">
+            <span>From: {{ mail.user.username }}</span> | 
+            <span>Category: {{ mail.category.name }}</span> | 
+            <span>{{ mail.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+        </div>
+        <div style="margin-bottom: 30px;">
+            <p>{{ mail.content }}</p>
+        </div>
+        
+        <h3>Comments</h3>
+        <div style="margin-top: 20px;">
+            {% for comment in comments %}
+            <div class="comment">
+                <div class="author">{{ comment.user.username }}</div>
+                <div class="date">{{ comment.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+                <p>{{ comment.content }}</p>
+            </div>
+            {% endfor %}
+            
+            {% if 'user_id' in session %}
+            <div style="margin-top: 20px;">
+                <h4>Add a Comment</h4>
+                <form method="POST" action="{{ url_for('add_comment', mail_id=mail.id) }}">
+                    <div>
+                        <label for="content">Comment</label>
+                        <textarea id="content" name="content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit">Submit Comment</button>
+                </form>
+            </div>
+            {% else %}
+            <p style="margin-top: 20px;">You need to <a href="{{ url_for('login') }}">login</a> to add a comment.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

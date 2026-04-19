@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Mail List</h2>
+    
+    <div class="category-filter">
+        <h3>Categories</h3>
+        <ul style="list-style: none; display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+            <li><a href="{{ url_for('index') }}" style="padding: 5px 10px; background-color: {{ ' #4285f4' if not selected_category else '#f0f0f0' }}; color: {{ 'white' if not selected_category else '#333' }}; border-radius: 4px; text-decoration: none;">All</a></li>
+            {% for category in categories %}
+            <li><a href="{{ url_for('index', category=category.id) }}" style="padding: 5px 10px; background-color: {{ '#4285f4' if selected_category == category.id|string else '#f0f0f0' }}; color: {{ 'white' if selected_category == category.id|string else '#333' }}; border-radius: 4px; text-decoration: none;">{{ category.name }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="mail-list">
+        {% for mail in mails %}
+        <div class="mail-item">
+            {% if mail.thumbnail %}
+            <img src="{{ mail.thumbnail }}" alt="Thumbnail" style="width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px;">
+            {% endif %}
+            <h3>{{ mail.title }}</h3>
+            <p>{{ mail.content[:100] }}...</p>
+            <div class="meta">
+                <span>From: {{ mail.user.username }}</span> | 
+                <span>Category: {{ mail.category.name }}</span> | 
+                <span>{{ mail.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+            </div>
+            <a href="{{ url_for('mail_detail', mail_id=mail.id) }}" style="display: inline-block; margin-top: 10px; padding: 5px 10px; background-color: #4285f4; color: white; border-radius: 4px; text-decoration: none;">Read More</a>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
